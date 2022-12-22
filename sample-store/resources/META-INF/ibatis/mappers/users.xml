@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap>
+	<!-- 
+		아이디로 회원정보 조회하기
+			id="getUserById"
+			parameterClass="string"
+			resultClass"com.sample.store.vo.User"
+			
+			UserDao에 메소드
+				public User getUserById(STring userId) {
+					User user = (User) SqlMapper.selectOne("getUserById", userId);
+					return user;
+					}
+	 -->
+	<select id="getUserById" parameterClass="string" resultClass="com.sample.store.vo.User">
+		select 
+			user_id				as id,
+			user_password		as password,
+			user_name			as name,
+			user_email			as email,
+			user_tel			as tel,
+			user_gender			as gender,
+			user_point			as point,
+			user_enabled		as enabled,
+			user_created_date	as createdDate,
+			user_updated_date	as updatedDate
+			
+		from 
+			sample_users
+		where
+			user_id = #value#
+	</select>
+	
+	<!-- 
+		이메일로 회원정보 조회하기
+			id="getUserById"
+			parameterClass="string"
+			resultClass"com.sample.store.vo.User"
+			
+			UserDao에 메소드
+				public User getUserByEmail(String email) {
+					User user = (User) SqlMapper.selectOne("getUserByEmail", email);
+					return user;
+					}	
+	 -->
+	<select id="getUserByEmail" parameterClass="string" resultClass="com.sample.store.vo.User">
+	
+		select 
+			user_id				as id,
+			user_password		as password,
+			user_name			as name,
+			user_email			as email,
+			user_tel			as tel,
+			user_gender			as gender,
+			user_point			as point,
+			user_enabled		as enabled,
+			user_created_date	as createdDate,
+			user_updated_date	as updatedDate
+		from 
+			sample_users
+		where 
+			user_email = #value#
+	
+	</select>
+	
+	<!-- 
+		사용자 정보 저장하기
+			id="insertUser"
+			parameterClass="com.sample.store.vo.User"
+			
+			UserDao의 메소드
+				public void insertUser(User user) {
+					SqlMapper.insert("insertUser", user);	// ibatis에게 "insertUser" SQL 실행요청, User객체 전달
+				}
+	 -->
+	<insert id="insertUser" parameterClass="com.sample.store.vo.User">
+		insert into sample_users
+			(user_id, user_password, user_name, user_email, user_tel, user_gender)
+		values
+			(#id#, #password#, #name#, #email#, #tel#, #gender#)
+	
+	</insert>
+	
+	<!--  
+		사용자이름으로 사용자조회하기
+		SQL
+			select *
+			from sample_users
+			where user_name = ?		// primary key, unique 제약조건이 지정된 컬럼 이외의 컬럼이 조건식에 사용되면 항상 여러행이 조회될 수 있다.
+	-->
+	<select id="getUsersCount" resultClass="int">
+		select count(*)
+		from sample_users
+	
+	</select>
+	<!-- 사용자 이름으로 사용자 조회하기 -->
+	<select id="getUsersByName" parameterClass="string" resultClass="com.sample.store.vo.User">
+		select 
+			user_id				as id,
+			user_password		as password,
+			user_name			as name,
+			user_email			as email,
+			user_tel			as tel,
+			user_gender			as gender,
+			user_point			as point,
+			user_enabled		as enabled,
+			user_created_date	as createdDate,
+			user_updated_date	as updatedDate
+		from sample_users
+		where user_name = #value#
+	</select>
+
+	<!--  
+		사용자 정보 변경하기
+			- 사용자 정보를 변경하는 작업을 항상 변경가능한 모든 정보를 업데이트한다.
+				* 비밀번호만 변경하는 SQL, 사용가능 여부만 변경하는 SQL, 적입포인트만 변경하는 SQL문을 따로 정의하지 않는다
+				* 사용자정보 수정전에 현재 사용자의 정보를 전부 조회하고, 조회된 정보에서 필요한 정보만 변경한 다음
+				  변경된 정보가 포함된 객체를 전달받아서 업데이트 작업을 수행한다.
+				* 비즈니스 로직에서 값이 변경된 것은 데이터베이스에 변경된 정보가 반영되고, 
+				  변경되지 않은 것은 앞에서 조회한 값이 그대로 다시 반영되기 때문에 비즈니스 로직에서 값을 변경한 것만
+				  테이블에서 변경되게 된다.
+	-->
+	<update id="updateUser" parameterClass="com.sample.store.vo.User">
+		
+		update
+			sample_users
+		set
+			user_password = #password#,
+			user_tel = #tel#,
+			user_point = #point#,
+			user_enabled = #enabled#,
+			user_updated_date = sysdate
+		where 
+			user_id = #id#
+	</update>
+	
+	
+	
+	
+	
+</sqlMap>

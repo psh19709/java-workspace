@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap>
+	<insert id="insertCartItem" parameterClass="com.sample.store.vo.CartItem">
+		insert into sample_cart_items
+			(user_id, product_no, item_amount)
+		values
+			(#userId#, #productNo#, #amount#)
+	</insert>
+	
+	<delete id="deleteCartItems" parameterClass="string">
+		delete from
+			sample_cart_items
+		where
+			user_id = #value#
+	</delete>
+	
+	<select id="getCartItemsByUserId" parameterClass="string" resultClass="com.sample.store.dto.CartItemDto">
+		select A.product_no as no,
+			A.product_name as name,
+			A.product_price as price,
+			B.item_amount as amount,
+			B.item_created_date as createdDate
+		from 
+			sample_products A, sample_cart_items B
+		where
+			 A.product_no = B.product_no
+			 and B.user_id = #value#
+		order by
+			 B.item_created_date desc
+	</select>
+	
+</sqlMap>
+
+
+
+
+
+

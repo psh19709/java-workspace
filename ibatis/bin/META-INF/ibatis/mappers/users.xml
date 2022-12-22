@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap>
+	<!-- 사용자 정보 insert  -->
+	<!-- 
+		<insert />
+			INSERT SQL 구문을 정의한다.
+		id="insertUser"
+			이 SQL구문을 식별하기 위한 아이디값을 지정한다.
+		parameterClass="com.sample.vo.User"
+			이 SQL구문 실행에 필요한 값을 포함하고 있는 객체의 타입을 지정한다.
+			이 SQL구문 실행에 필요한 사용자정보는 User객체로 전달받는다
+		#변수명#
+			parameterClass로 지정한 객체의 변수명이다.
+			해당 객체의 변수에 저장된 값이 #변수명#에 바인딩된다.
+	 -->
+	<insert id="insertUser" parameterClass="com.sample.vo.User">
+		insert into sample_users
+		(user_id, user_password, user_name, user_email, user_tel, user_gender)
+		values
+		(#id#, #password#, #name#, #email#, #tel#, #gender#)
+	</insert>
+	
+	<!-- 
+		<delete />
+			DELETE SQL 구문을 정의한다.
+		id="deleteUser"
+			이 SQL구문을 식별하기 위한 아이디값을 지정한다.
+		parameterClass="string"
+			이 SQL구문 실행에 필요한 값은 문자열타입의 값이다.
+		#value#
+			parameterClass의 타입이 VO객체나 Map객체가 아니고 문자열, 정수, 실수 일때 사용한다.
+			#value# 위치에 해당 값이 바인딩된다.	
+			SQL 실행시 필요한 값이 오직 하나일 때 사용한다.		
+	 -->
+	<delete id="deleteUser" parameterClass="string">	<!-- string은 java.lang.String에 대한 별칭이다. -->
+		delete from sample_users
+		where user_id = #value#
+	</delete>
+	
+	<!-- 
+		<select />
+			SELECT SQL 구문을 정의한다.
+		id="getAllUsers"
+			이 SQL구문을 식별하기 위한 아이디값을 지정한다.
+		resultClass="com.sample.vo.User"
+			이 SQL구문 실행 후 조회된 데이터를 저장할 객체의 클래스 타입을 지정한다.
+			resultClass에서 지정하는 클래스 타입은 행 하나를 어느 객체에 담을 것인지 지정하는 것이다
+			조회결과(ResultSet) 핸들링
+				1. ibatis 엔진은 SQL 구문을 실행한 후, resultClass에 지정된 클래스로 객체를 생성한다.
+				2. ibatis 엔진은 1번에서 생성한 객체에 값을 저장할 때, 컬럼명과 동일한 이름의 변수에 값을 저장한다.
+				   * 컬럼명과 변수명이 서로 다르면 컬럼명을 변수이름과 같은 이름의 별칭으로 지정한다.
+		
+		*** SELECT 구문의 실행결과 여러 행이 획득되는 경우
+			List SqlMapper.selectList(String id)
+			List SqlMapper.selectList(String id, Object param)으로 이 SQL 구문을 실행한다.
+			* List객체를 생성한 다음 조회된 행의 갯수만큼 resultClass에 지정된 객체를 생성해서 값을 담고, 그 객체를 List에 저장시키고, List를 반환한다.
+			* 조회된 행이 하나도 없으면 길이가 0인 List객체가 반환된다.(결코 null이 반환되지 않는다.)
+			
+		*** SELECT 구문의 실행결과가 언제나 한 행만 획득되는 경우
+			Object SqlMapper.selectOne(String id)
+			Object SqlMapper.selectOne(String id, Object param)으로 이 SQL 구문을 실행한다.
+			* resultClass에 지정된 객체를 생성해서 값을 담고, 그 객체를 반환한다.
+			* 조회된 행이 하나도 없으면 null이 반환된다.
+			
+	 -->
+	<select id="getAllUsers" resultClass="com.sample.vo.User">
+		select user_id				as id,
+				user_password		as password,
+				user_name			as name,
+				user_email			as email,
+				user_tel			as tel,
+				user_gender			as gender,
+				user_point			as point,
+				user_enabled		as enabled,
+				user_created_date	as createdDate,
+				user_updated_date	as updatedDate
+		from sample_users
+		order by user_id asc
+	</select>
+	
+	<select id="getUserById" parameterClass="string" resultClass="com.sample.vo.User">
+		select user_id				as id,
+				user_password		as password,
+				user_name			as name,
+				user_email			as email,
+				user_tel			as tel,
+				user_gender			as gender,
+				user_point			as point,
+				user_enabled		as enabled,
+				user_created_date	as createdDate,
+				user_updated_date	as updatedDate
+		from sample_users
+		where user_id = #value#
+	</select>
+	
+	
+	
+</sqlMap>
+
+
+
+
+
+

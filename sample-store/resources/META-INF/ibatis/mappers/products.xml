@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap>
+	<!-- 
+		모든 상품 정보를 조회하는 SQL
+	 -->
+	<select id="getAllProducts" resultClass="com.sample.store.vo.Product">
+		select
+			product_no 				as no,
+			product_name 			as name,
+			product_maker 			as maker,
+			product_price 			as price,
+			nvl(product_discount_rate, 0) 	as discountRate,
+			product_stock 			as stock,
+			product_on_sell 		as onSell,
+			product_created_date 	as createdDate,
+			product_updated_date 	as updatedDate
+		from
+			sample_products
+		order by
+			product_no desc
+	</select>
+	 
+	<!-- 
+		상품번호에 해당하는 상품정보를 조회하는 SQL
+	 -->
+	<select id="getProductByNo" parameterClass="int" resultClass="com.sample.store.vo.Product">
+		select
+			product_no 				as no,
+			product_name 			as name,
+			product_maker 			as maker,
+			product_price 			as price,
+			nvl(product_discount_rate, 0) 	as discountRate,
+			product_stock 			as stock,
+			product_on_sell 		as onSell,
+			product_created_date 	as createdDate,
+			product_updated_date 	as updatedDate
+		from
+			sample_products
+		where
+			product_no = #value#
+	</select>
+	
+	<!-- 
+		새 상품정보를 추가하는 SQL
+	 -->
+	<insert id="insertProduct" parameterClass="com.sample.store.vo.Product">
+		insert into sample_products
+			(product_no, product_name, product_maker, product_price, product_discount_rate, product_stock)
+		values
+			(sample_products_seq.nextval, #name#, #maker#, #price#, #discountRate#, #stock#)
+	</insert>
+	 
+	<!-- 
+		상품이름으로 상품정보를 조회하는 SQL
+	 -->
+	<select id="getProductsByName" parameterClass="string" resultClass="com.sample.store.vo.Product">
+		select
+			product_no 				as no,
+			product_name 			as name,
+			product_maker 			as maker,
+			product_price 			as price,
+			nvl(product_discount_rate, 0) 	as discountRate,
+			product_stock 			as stock,
+			product_on_sell 		as onSell,
+			product_created_date 	as createdDate,
+			product_updated_date 	as updatedDate
+		from
+			sample_products
+		where
+			product_name like '%' || #value# || '%'
+		order by
+			product_no desc
+	</select>
+	 
+	<!-- 
+		상품 가격(최소가격, 최대가격)으로 상품정보를 조회하는 SQL
+	 -->
+	<select id="getProductsByPrice" parameterClass="map" resultClass="com.sample.store.vo.Product">
+		<![CDATA[
+		select
+			product_no 				as no,
+			product_name 			as name,
+			product_maker 			as maker,
+			product_price 			as price,
+			nvl(product_discount_rate, 0) 	as discountRate,
+			product_stock 			as stock,
+			product_on_sell 		as onSell,
+			product_created_date 	as createdDate,
+			product_updated_date 	as updatedDate
+		from
+			sample_products
+		where
+			product_price >= #minPrice# and product_price <= #maxPrice#
+		order by
+			product_price asc
+		]]>
+	</select>
+	 
+	<!-- 
+		상품정보를 수정하는 SQL
+	 -->
+	<update id="updateProduct" parameterClass="com.sample.store.vo.Product">
+		update
+			sample_products
+		set
+			product_price = #price#,
+			product_discount_rate = #discountRate#,
+			product_stock = #stock#,
+			product_on_sell = #onSell#,
+			product_updated_date = sysdate
+		where
+			product_no = #no#
+	</update>
+</sqlMap>
+
+
+
+
+
+
