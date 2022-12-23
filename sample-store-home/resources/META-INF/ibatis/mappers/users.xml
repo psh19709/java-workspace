@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap>
+ 
+	<!-- 
+		public User getUserById(String id) {}
+	 -->
+ 	<select id="getUserById" parameterClass="string" resultClass="com.sample.store.vo.User">
+ 		select
+ 			user_id as id,
+ 			user_password as password,
+ 			user_name as name,
+ 			user_email as email,
+ 			user_tel as tel,
+ 			user_gender as gender,
+ 			user_point as point,
+ 			user_enabled as enabled,
+ 			user_created_date as createdDate,
+ 			user_updated_date as updatedDate
+ 		from
+ 			sample_users
+ 		where
+ 			user_id = #value#
+ 	</select>
+ 	
+ 	<!-- 
+ 		public User getUserByEmail(String email) {}
+ 	 -->
+ 	<select id="getUserByEmail" parameterClass="string" resultClass="com.sample.store.vo.User">
+ 		select
+ 			user_id as id,
+ 			user_password as password,
+ 			user_name as name,
+ 			user_email as email,
+ 			user_tel as tel,
+ 			user_gender as gender,
+ 			user_point as point,
+ 			user_enabled as enabled,
+ 			user_created_date as createdDate,
+ 			user_updated_date as updatedDate
+ 		from
+ 			sample_users
+ 		where
+ 			user_email = #value#
+ 	</select>
+ 	
+ 	<!-- 
+ 		public void insertUser(User user) {}
+ 	 -->
+ 	<insert id="insertUser" parameterClass="com.sample.store.vo.User">
+ 		insert into sample_users
+ 			(user_id, user_password, user_name, user_email, user_tel, user_gender)
+ 		values
+ 			(#id#, #password#, #name#, #email#, #tel#, #gender#)
+ 	</insert>
+ 	
+ 	<!-- 
+ 		public void updateUser(User user) {}
+ 	 -->
+ 	<update id="updateUser" parameterClass="com.sample.store.vo.User">
+ 		update
+ 			sample_users
+ 		set
+ 			user_password = #password#,
+ 			user_tel = #tel#,
+ 			user_point = #point#,
+ 			user_enabled = #enabled#,
+ 			user_updated_date = sysdate
+ 		where
+ 			user_id = #id#
+ 	</update>
+</sqlMap>

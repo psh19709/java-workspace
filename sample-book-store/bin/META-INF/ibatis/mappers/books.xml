@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap>
+	<typeAlias alias="Book" type="com.book.management.vo.Book" />
+	
+ 	<select id="getAllBooks" resultClass="Book">
+ 	select
+ 		book_no 				as no,
+ 		book_title 				as title,
+ 		book_author 			as author,
+ 		book_publisher 			as publisher,
+ 		book_discount_price 	as discountPrice,
+ 		book_stock 				as stock,
+ 		book_created_date 		as createdDate,
+ 		book_updated_date 		as updatedDate
+ 	from
+ 		sample_books
+ 	order by
+ 		book_no asc
+ 	</select>
+ 	
+ 	<select id="getBooksByTitle" parameterClass="string" resultClass="Book">
+ 	select
+ 		book_no 				as no,
+ 		book_title 				as title,
+ 		book_author 			as author,
+ 		book_publisher 			as publisher,
+ 		book_discount_price 	as discountPrice,
+ 		book_stock 				as stock,
+ 		book_created_date 		as createdDate,
+ 		book_updated_date 		as updatedDate
+ 	from
+ 		sample_books
+ 		
+ 	where
+ 		book_title like '%' || #value# || '%'
+ 	order by
+ 		book_no desc
+ 	</select>
+ 	
+ 	<select id="getBooksByPrice" parameterClass="map" resultClass="Book"> 
+ 	select
+ 		book_no 				as no,
+ 		book_title 				as title,
+ 		book_author 			as author,
+ 		book_publisher 			as publisher,
+ 		book_discount_price 	as discountPrice,
+ 		book_stock 				as stock,
+ 		book_created_date 		as createdDate,
+ 		book_updated_date 		as updatedDate
+ 	from
+ 		sample_books
+ 		
+ 	where
+ 		book_price between #min# and #max#
+ 	order by
+ 		book_price desc
+ 	</select>
+ 	
+ 	<!-- 
+ 		ibatis에게 BookDao가 id"insertBook" SQL구문 실행을 요청할때 전달되는 Book객체의 변수 상태
+ 	 -->
+ 	<insert id="insertBook" parameterClass="Book">
+ 		insert into sample_books
+ 			(book_no, book_title, book_author, book_publisher, book_price, book_discount_price, book_stock)
+ 		values
+ 			(SAMPLE_BOOKS_SEQ.NEXTVAL, #title#, #author#, #publisher#, #price#, #discountPrice#, #stock#)
+ 	</insert>
+ 	
+ 	<select id="getBookByNo" parameterClass="int" resultClass="Book">
+	 	select
+	 		book_no 				as no,
+	 		book_title 				as title,
+	 		book_author 			as author,
+	 		book_publisher 			as publisher,
+	 		book_discount_price 	as discountPrice,
+	 		book_stock 				as stock,
+	 		book_created_date 		as createdDate,
+	 		book_updated_date 		as updatedDate
+	 	from
+	 		sample_books
+	 	where 
+	 		book_no = #value#
+ 	
+ 	</select>
+ 	
+ 	<update id="updateBook" parameterClass="Book">
+ 		update
+ 			sample_books
+ 		set
+ 			book_title = #title#,
+ 			book_author = #author#,
+ 			book_publisher = #publisher#,
+ 			book_price = #price#,
+ 			book_discount_price = #discountPrice#,
+ 			book_stock = #stock#,
+ 			book_updated_date = sysdate
+ 		where
+ 		 	book_no = #no#
+ 	</update>
+ 	
+ 	<delete id="deleteBook" parameterClass="int">
+ 		delete from 
+ 			sample_books
+ 		where 
+ 			book_no = #no#
+ 	</delete>
+	
+</sqlMap>
